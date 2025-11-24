@@ -1,10 +1,10 @@
 open List
+exception TODO
 
 (* identifier for variables*)
 type ident = string
 
 (* this is a subset of MiniCaml. Lets extend it with Delay *)
-
 
 
 (* Parsing *)
@@ -13,11 +13,7 @@ type ident = string
 Let's try to parse these examples: 
 1. fun (x : Susp Int) -> let delay y = x in y
 
-Fn ("x",Susp Int, LetDelay ( "y" , Var "x"  , Var "y" )  )
-
 2. fun (x : int => int) -> fun (y: int) -> 5 
-
-Fn ("x", Arrow(Int, Int)  ,  Fn ( "y",  Int, ConstI 5 ))
 
 3. let delay x = delay (fun (y:int) -> y) in x
 *)
@@ -34,7 +30,7 @@ type exp =
 | Fn of ident * tp * exp            (* fn x : t -> e  *)
 
 
- (*Type Inference*)
+(*Type Inference*)
 exception TypeError of string
 type ctx = (ident * tp) list
 
@@ -82,7 +78,7 @@ let rec eval (e : exp): exp =
   match e with 
   | Var _ -> raise EvaluationStuck
   | ConstI i -> e
-  | Fn (_,_,_) -> e         (* values evaluate to themselves!*)
+  | Fn (_,_,_) -> e         (* functions are values *)
 
 
 
