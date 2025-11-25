@@ -18,7 +18,6 @@ Let's try to parse these examples:
 3. let delay x = delay (fun (y:int) -> y) in x
 *)
 
-
 type tp = 
 | Int
 | Arrow of tp * tp
@@ -29,6 +28,17 @@ type exp =
 | Var of ident                      (* x *)
 | Fn of ident * tp * exp            (* fn x : t -> e  *)
 
+
+(*       Gamma |- e :  A 
+    --------------------------delay
+    Gamma |- delay e : Susp A
+
+
+    Gamma |- e1 : Susp A    Gamma,x: A |- e2 : B
+    -------------------------------------------- letdelay
+        Gamma |- let delay x = e1 in e2 : B
+       
+*)
 
 (*Type Inference*)
 exception TypeError of string
@@ -64,8 +74,8 @@ let testinfer3 = infer [] (LetDelay ("x", Delay (Fn ("y", Int, Var "y")), Var "x
 
 (*
    e1 || delay e1'   [e1'/x]e2 || v
-   --------------------------------     ---------------------
-   let delay x = e1 in e2 || v           delay e || delay e
+   -------------------------------- letdelay     --------------------- delay
+   let delay x = e1 in e2 || v                    delay e || delay e
 
 *)
 
